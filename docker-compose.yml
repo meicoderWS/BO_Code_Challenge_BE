@@ -6,7 +6,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql
     env_file:
       - docker.env
     networks:
@@ -15,5 +15,3 @@ services:
 networks:
   postgres:
     driver: bridge
-volumes:
-  db_data:
