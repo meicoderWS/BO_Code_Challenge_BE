@@ -7,31 +7,38 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { LocationsService } from '../services/locations.service';
+import { CreateLocationDto } from '../dto/create-location.dto';
+import { UpdateLocationDto } from '../dto/update-location.dto';
 
 @Controller('api/locations')
 export class LocationsController {
+  constructor(private readonly locationService: LocationsService) {}
   @Get()
-  getAll() {
-    return [1, 2, 3];
+  async getAll() {
+    return this.locationService.getAll();
   }
 
   @Get(':id')
-  getSingle(@Param('id') id: number) {
-    return id;
+  async getSingle(@Param('id') id: number) {
+    return this.locationService.getSingle(id);
   }
 
   @Post()
-  create(@Body() body: any) {
-    return body;
+  async create(@Body() createLocationDto: CreateLocationDto) {
+    return this.locationService.create(createLocationDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() body: any) {
-    return body;
+  async update(
+    @Param('id') id: number,
+    @Body() updateItemDto: UpdateLocationDto,
+  ) {
+    return this.locationService.update(id, updateItemDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number) {
-    return id;
+  async delete(@Param('id') id: number) {
+    await this.locationService.delete(id);
   }
 }
