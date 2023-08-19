@@ -23,7 +23,15 @@ export class LocationsService {
 
   async create(createLocationDto: CreateLocationDto) {
     const location = new Location(createLocationDto);
-    await this.locationManager.save(location);
+    const { name, latitude, longitude } = location;
+    console.log(name, latitude, longitude);
+
+    const WGS84 = 4326;
+    await this.locationManager.query(
+      `INSERT INTO location (name, latitude, longitude, location) VALUES  ($1, $2, $3, ST_SetSRID(ST_MakePoint($4, $5), ${WGS84}))`,
+      [name, latitude, longitude, longitude, latitude],
+    );
+    /* await this.locationManager.save(location); */
   }
 
   async update(id: number, updateLocationDto: UpdateLocationDto) {

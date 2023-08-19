@@ -1,6 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-/* type Literal = boolean | null | number | string;
-export type JSONValue = Literal | { [key: string]: JSONValue } | JSONValue[]; */
+import { Entity, Column, PrimaryGeneratedColumn, Point } from 'typeorm';
 
 @Entity()
 export class Location {
@@ -10,14 +8,14 @@ export class Location {
   @Column()
   name: string;
 
-  @Column()
+  @Column('numeric')
   latitude: number;
 
-  @Column()
+  @Column('numeric')
   longitude: number;
 
-  /* @Column()
-  location: JSONValue; */
+  @Column('geometry')
+  location: Point;
 
   constructor(location: Partial<Location>) {
     Object.assign(this, location);
