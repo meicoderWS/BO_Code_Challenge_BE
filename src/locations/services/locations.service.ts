@@ -14,11 +14,18 @@ export class LocationsService {
   ) {}
 
   async getAll() {
-    return this.locationsRepository.find();
+    return await this.locationManager.query(
+      'select *, ST_AsText(location) as location_as_text from location',
+    );
+    /* return this.locationsRepository.find(); */
   }
 
   async getSingle(id: number) {
-    return this.locationsRepository.findOneBy({ id });
+    return await this.locationManager.query(
+      'select *, ST_AsText(location) as location_as_text from location where id = $1',
+      [id],
+    );
+    /* return this.locationsRepository.findOneBy({ id }); */
   }
 
   async create(createLocationDto: CreateLocationDto) {
