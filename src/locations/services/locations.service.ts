@@ -20,7 +20,7 @@ export class LocationsService {
     /* return this.locationsRepository.find(); */
   }
 
-  async getSingle(id: number) {
+  async getSingle(id: string) {
     return await this.locationManager.query(
       'select *, ST_AsText(location) as location_as_text from location where id = $1',
       [id],
@@ -31,17 +31,18 @@ export class LocationsService {
   async create(createLocationDto: CreateLocationDto) {
     const location = new Location(createLocationDto);
     const { name, latitude, longitude } = location;
-    console.log(name, latitude, longitude);
 
     const WGS84 = 4326;
-    await this.locationManager.query(
-      `INSERT INTO location (name, latitude, longitude, location) VALUES  ($1, $2, $3, ST_SetSRID(ST_MakePoint($4, $5), ${WGS84}))`,
+    const response = await this.locationManager.query(
+      `INSERT INTO location (name, latitude, longitude, location) VALUES  ($1, $2, $3, ST_SetSRID(ST_MakePoint($4, $5), ${WGS84})) RETURNING id`,
       [name, latitude, longitude, longitude, latitude],
     );
+    return response[0].id;
+
     /* await this.locationManager.save(location); */
   }
 
-  async update(id: number, updateLocationDto: UpdateLocationDto) {
+  async update(id: string, updateLocationDto: UpdateLocationDto) {
     const location = await this.locationsRepository.findOneBy({ id });
     location.name = updateLocationDto.name;
     location.latitude = updateLocationDto.latitude;

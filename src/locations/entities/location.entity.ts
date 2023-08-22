@@ -1,9 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, Point } from 'typeorm';
+import { Entity, Column, Point, Generated, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Location {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  @Generated('uuid')
+  id: string;
 
   @Column()
   name: string;

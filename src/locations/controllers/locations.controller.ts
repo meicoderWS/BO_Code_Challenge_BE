@@ -20,7 +20,7 @@ export class LocationsController {
   }
 
   @Get(':id')
-  async getSingle(@Param('id') id: number) {
+  async getSingle(@Param('id') id: string) {
     return this.locationService.getSingle(id);
   }
 
@@ -31,7 +31,7 @@ export class LocationsController {
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateItemDto: UpdateLocationDto,
   ) {
     return this.locationService.update(id, updateItemDto);
