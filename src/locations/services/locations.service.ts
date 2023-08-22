@@ -13,7 +13,17 @@ export class LocationsService {
     private readonly locationManager: EntityManager,
   ) {}
 
-  async getAll() {
+  async getAll(filters = undefined) {
+    if (filters) {
+      const { distance, latitude, longitude } = filters;
+      return await this.locationManager.query(
+        `SELECT *
+         FROM location
+         WHERE earth_box(ll_to_earth($1, $2), $3 * 1000) @> ll_to_earth(latitude, longitude)
+         AND earth_distance(ll_to_earth($1, $2), ll_to_earth(latitude, longitude)) <= $3 * 1000.0`,
+        [parseFloat(latitude), parseFloat(longitude), parseInt(distance)],
+      );
+    }
     return await this.locationManager.query(
       'select *, ST_AsText(location) as location_as_text from location',
     );

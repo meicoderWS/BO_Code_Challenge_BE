@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { LocationsService } from '../services/locations.service';
 import { CreateLocationDto } from '../dto/create-location.dto';
@@ -15,8 +16,20 @@ import { UpdateLocationDto } from '../dto/update-location.dto';
 export class LocationsController {
   constructor(private readonly locationService: LocationsService) {}
   @Get()
-  async getAll() {
-    return this.locationService.getAll();
+  async getAll(
+    @Query('distance') distance: number,
+    @Query('latitude') latitude: number,
+    @Query('longitude') longitude: number,
+  ) {
+    let filters = undefined;
+    if (distance && latitude && longitude) {
+      filters = {
+        distance,
+        latitude,
+        longitude,
+      };
+    }
+    return this.locationService.getAll(filters);
   }
 
   @Get(':id')
